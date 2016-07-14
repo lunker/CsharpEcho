@@ -1,0 +1,5 @@
+D:\workspace\CsharpEcho\EchoLibrary\bin\Debug\EchoLibrary.dll
+D:\workspace\CsharpEcho\EchoLibrary\bin\Debug\EchoLibrary.pdb
+D:\workspace\CsharpEcho\EchoLibrary\obj\Debug\EchoLibrary.dll
+D:\workspace\CsharpEcho\EchoLibrary\obj\Debug\EchoLibrary.pdb
+D:\workspace\CsharpEcho\EchoLibrary\obj\Debug\EchoLibrary.csprojResolveAssemblyReference.cache

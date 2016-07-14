@@ -1,0 +1,8 @@
+D:\workspace\CsharpEcho\CsharpEcho\obj\Debug\CsharpEchoServer.csprojResolveAssemblyReference.cache
+D:\workspace\CsharpEcho\CsharpEcho\bin\Debug\CsharpEcho.exe.config
+D:\workspace\CsharpEcho\CsharpEcho\bin\Debug\CsharpEcho.exe
+D:\workspace\CsharpEcho\CsharpEcho\bin\Debug\CsharpEcho.pdb
+D:\workspace\CsharpEcho\CsharpEcho\obj\Debug\CsharpEcho.exe
+D:\workspace\CsharpEcho\CsharpEcho\obj\Debug\CsharpEcho.pdb
+D:\workspace\CsharpEcho\CsharpEcho\bin\Debug\EchoLibrary.dll
+D:\workspace\CsharpEcho\CsharpEcho\bin\Debug\EchoLibrary.pdb

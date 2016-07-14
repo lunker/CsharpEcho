@@ -1,0 +1,1 @@
+D:\workspace\CsharpEcho\CsharpEcho\bin\Debug\CsharpEcho.exe.config
