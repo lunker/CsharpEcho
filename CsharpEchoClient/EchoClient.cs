@@ -14,23 +14,12 @@ namespace CsharpEchoClient
 {
     class EchoClient
     {
-        static void Main(string[] args)
-        {
-            Client client = new Client();
-            client.start();
-        }
-    }
+        private Socket peer=null;
+        private int HEART_BEATS = 0;
 
-    class Client
-    {
-        private Socket peer;
-        public const String IP = "127.0.0.1";
-        public const int PORT = 9999;
-        public const int HEADER_SIZE = 4;
-
-        public Client()
+        public EchoClient()
         {
-            ;
+         
         }
 
         public Socket Peer
@@ -38,64 +27,144 @@ namespace CsharpEchoClient
             get { return this.peer; }
         }
 
+        public Boolean connect()
+        {
+            IPEndPoint peerEP = null;
+            peerEP = new IPEndPoint(IPAddress.Parse(MyConst.IP), MyConst.PORT);
+
+            if (peer == null || !peer.Connected)
+            {
+                try
+                {
+                    peer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                }
+                catch (SocketException se)
+                {
+                    Console.WriteLine("socket create error");
+                }
+            }
+
+            try
+            {
+                peer.Connect(peerEP);
+                if (peer.Connected)
+                    return true;
+                else
+                    return false;
+            }
+            catch(SocketException e)
+            {
+                //Console.WriteLine(e.StackTrace);
+                //Console.WriteLine("Server is closed");
+                return false;
+            }
+
+        }// end method
+      
+        public string getStr()
+        {
+            string str = "";
+            Console.Write("메세지를 입력하세요 : ");
+            str = Console.ReadLine();
+            return str;
+        }
+
+        public Boolean send(string msg)
+        {
+            // generate body
+            Body body = new Body(msg);
+            byte[] bodyBytes = Utils.ObjectToByte(body);
+
+            // generate header
+            Header header = new Header(bodyBytes.Length);
+
+            try
+            {
+                Utils.sendMessage(peer, header);
+                Utils.sendMessage(peer, body);
+            }
+            catch (SocketException se)
+            {
+                Console.WriteLine("send failed");
+                return false;
+            }
+
+            Console.WriteLine("[Client] : "+ Encoding.UTF8.GetString(body.Msg));
+            return true;
+        }
+
+        public Boolean read()
+        {
+            Header echoHeader = null;
+            Body echoBody = null;
+            
+            try
+            {
+                echoHeader = (Header)Utils.readMessage(this.Peer, MyConst.msgHeaderSerailizedSize);
+                // read body from buff
+                echoBody = (Body)Utils.readMessage(peer, echoHeader.BodySize);
+
+                Console.WriteLine("[Echo Server] : " + Encoding.UTF8.GetString(echoBody.Msg));
+                Console.WriteLine("----------------------------------------------\n\n");
+            }
+            catch (SocketException se)
+            {
+                //Console.WriteLine(se.StackTrace);
+                return false;
+            }
+
+            return true;
+        }
 
         public void start()
         {
-
-            String inputMsg = "";
-
-            if (connect())
-            {
-                Console.WriteLine("서버 연결 완료");
-            }
-            
             while (true)
             {
+                while (!connect())
+                {
+                    Console.WriteLine("Server is closed");
+                    Console.WriteLine("try reconnect . . .");
+                }
+                Console.WriteLine("서버 연결 완료");
 
-                Console.Write("메세지를 입력하세요 : ");
-                
-                inputMsg = Console.ReadLine();
+                while (true)
+                {
+                    // check tcp connection 
+                    // poll 대신에 heart-beat을 보내야 한다 !!! 
+                    //Header header
+                    if (!peer.Poll(MyConst.HEART_BEAT_TIME*1000, SelectMode.SelectWrite))
+                    {
+                        HEART_BEATS++;
+                        Console.WriteLine("heart beat!!");
+                        if (HEART_BEATS == 3)
+                        {
+                            break;
+                        }
+                        continue;
+                    }
+                    HEART_BEATS = 0;
 
+                    String strMsg = getStr();
 
-                // generate body
-                Body body = new Body(inputMsg);
-                byte[] bodyBytes = Utils.ObjectToByte(body);
+                    if (!send(strMsg))
+                    {
+                        peer.Close();
+                        break;
+                    }
+                        
+                    if (!read())
+                    {
+                        peer.Close();
+                        break;
+                    }
+                        
 
-                // generate header
-                Header header = new Header(bodyBytes.Length);
-                byte[] headerBytes = Utils.ObjectToByte(header);
-
-                
-                peer.Send(headerBytes);
-                peer.Send(bodyBytes);
-
-                // read header from buff
-                Header echoHeader = Utils.readHeader(this.Peer, MyConst.msgHeaderSerailizedSize);
-                // read body from buff
-                Body echoBody = Utils.readBody(peer, echoHeader.BodySize);
-
-
-                // print message
-                Console.WriteLine("[Client] : " + Encoding.UTF8.GetString(body.Msg));
-                Console.WriteLine("[Echo Server] : " + Encoding.UTF8.GetString(echoBody.Msg));
-                Console.WriteLine("----------------------------------------------\n\n");
-              
-            }// end while
+                }// end while
+            }
+           
         }// end method
 
-        public Boolean connect()
-        {
-            IPEndPoint peerEP = new IPEndPoint(IPAddress.Parse(IP),MyConst.port);
-
-
-            peer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            peer.Connect(peerEP);
-            if (peer.Connected)
-                return true;
-            else
-                return false;
-        }// end method
+       
 
     }// end client class
 }// end namespace

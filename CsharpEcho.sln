@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsharpEchoClient", "CsharpE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EchoLibrary", "EchoLibrary\EchoLibrary.csproj", "{5DD703C9-A2A8-42C4-B416-0C3B0F3835FF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6763D819-5E4B-4D7F-9905-8412EE9B0945}"
+	ProjectSection(SolutionItems) = preProject
+		보완사항.txt = 보완사항.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -32,8 +32,6 @@ namespace EchoLibrary
         public static Body readBody(Socket peer, int bodySize)
         {
             byte[] buff = new byte[bodySize];
-
-            //peer.Receive(buff);
             int cnt = bodySize;
 
             for (; cnt > 0; cnt -= peer.Receive(buff, cnt, 0)) ;
@@ -47,8 +45,6 @@ namespace EchoLibrary
             return body;
         }
 
-        
-       
         public static int sendHeader(Socket peer, Header header)
         {
 
@@ -67,10 +63,28 @@ namespace EchoLibrary
             return byteSent;
         }
 
-        public static int sendMessage()
+        public static Object readMessage(Socket peer, int size)
         {
-            return 0;
+            byte[] buff = new byte[size];
+            Object msg = null;
+            int cnt = 0;
+
+            //for (; cnt > 0; cnt -= peer.Receive(buff, cnt, 0)) {; }
+            cnt = peer.Receive(buff, size, 0);
+            
+            msg = Utils.ByteToObject(buff);
+
+            return msg;
         }
+
+        public static int sendMessage(Socket peer, Object obj)
+        {
+            int byteSent = 0;
+            byteSent = peer.Send(ObjectToByte(obj));
+
+            return byteSent;
+        }
+        
         public static byte[] ObjectToByte(object obj)
         {
             try

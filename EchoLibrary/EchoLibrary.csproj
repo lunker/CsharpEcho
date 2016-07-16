@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Body.cs" />
+    <Compile Include="Header.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MyConst.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

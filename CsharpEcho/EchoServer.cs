@@ -12,19 +12,6 @@ using System.Collections;
 
 namespace CsharpEchoServer
 {
-    class EchoServer
-    {
-        static void Main(string[] args)
-        {
-            Server echoServer = new Server();
-            echoServer.start();
-
-            
-                        
-            //Console.ReadKey();
-        }
-    }
-
     class ClientInfo
     {
         Socket peer;
@@ -63,12 +50,22 @@ namespace CsharpEchoServer
 
                 try
                 {
+
+
+                    if (clientSocket.Poll(MyConst.HEART_BEAT_TIME * 1000, SelectMode.SelectRead))
+                    {
+                        Console.WriteLine("poll~~");
+                    }
+
                     header = Utils.readHeader(clientSocket, MyConst.msgHeaderSerailizedSize);
                     //Console.WriteLine("body size : " + header.BodySize);
 
                     body = Utils.readBody(clientSocket, header.BodySize);
                     //Console.WriteLine("MSG from client : " + Encoding.UTF8.GetString(body.Msg));
                     Console.WriteLine("Message : <" + Encoding.UTF8.GetString(body.Msg) + "> received from client # " + clientID);
+
+                    Thread.Sleep(5000);
+
                     Utils.sendHeader(clientSocket, header);
                     Utils.sendBody(clientSocket, body);
                 }
@@ -88,13 +85,10 @@ namespace CsharpEchoServer
 
     }// end class
 
-    class Server
+    class EchoServer
     {
-        public const String IP = "127.0.0.1";
-        //public const int PORT= 9999;
         public const int MAX_CONNECTIONS = 1000;
         public const int MSG_HEADER_SIZE = 4;
-        //public ArrayList clientList = new ArrayList();
 
         private int clientID = 0;
 
@@ -107,7 +101,7 @@ namespace CsharpEchoServer
         }
 
         // echo server constructor
-        public Server()
+        public EchoServer()
         {
         }
 
@@ -135,7 +129,7 @@ namespace CsharpEchoServer
 
         public Socket connectSocket()
         {
-            IPEndPoint localEP = new IPEndPoint(IPAddress.Parse(IP), MyConst.port);
+            IPEndPoint localEP = new IPEndPoint(IPAddress.Parse(MyConst.IP), MyConst.PORT);
 
             waitSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             waitSocket.Bind(localEP);
@@ -143,7 +137,7 @@ namespace CsharpEchoServer
             //waitSocket.Close();
             if (waitSocket.IsBound)
             {
-                Console.WriteLine("Server is bounded on " + MyConst.port);
+                Console.WriteLine("Server is bounded on " + MyConst.PORT);
 
                 return waitSocket;
             }
