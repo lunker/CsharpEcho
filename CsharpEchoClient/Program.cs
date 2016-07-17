@@ -12,9 +12,6 @@ namespace CsharpEchoClient
         {
             EchoClient client = new EchoClient();
             client.start();
-
-            HeartCheck checker = new HeartCheck();
-          
         }
     }
 }

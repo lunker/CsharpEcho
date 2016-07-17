@@ -25,7 +25,7 @@ namespace CsharpEchoClient
             Header header = new Header();
 
 
-            clientSocket.Send(Utils.sendMessage());
+            //clientSocket.Send(Utils.sendMessage());
         }
     
     }

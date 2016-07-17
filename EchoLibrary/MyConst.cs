@@ -12,7 +12,7 @@ namespace EchoLibrary
         public const int PORT= 9998;
         public const int msgHeaderSize = 4;
         public const int maxPacketSize = 1500;
-        public const int msgHeaderSerailizedSize = 137;
+        public const int msgHeaderSerailizedSize = 146;
         public const short MSG_PLAIN = 100;
         public const short MSG_HEART_BEAT = 200;
 

@@ -27,6 +27,9 @@ namespace CsharpEchoClient
             get { return this.peer; }
         }
 
+        /*
+         * connect to server
+         */
         public Boolean connect()
         {
             IPEndPoint peerEP = null;
@@ -61,6 +64,9 @@ namespace CsharpEchoClient
 
         }// end method
       
+        /*
+         * read message from stdin
+         */
         public string getStr()
         {
             string str = "";
@@ -68,18 +74,19 @@ namespace CsharpEchoClient
             str = Console.ReadLine();
             return str;
         }
-
-        public Boolean send(string msg)
+        
+        public Boolean send(short type, string msg)
         {
             // generate body
             Body body = new Body(msg);
             byte[] bodyBytes = Utils.ObjectToByte(body);
 
             // generate header
-            Header header = new Header(bodyBytes.Length);
+            Header header = new Header(type, bodyBytes.Length);
 
             try
             {
+                Console.WriteLine("new header size : " + Utils.ObjectToByte(header).Length);
                 Utils.sendMessage(peer, header);
                 Utils.sendMessage(peer, body);
             }
@@ -93,6 +100,10 @@ namespace CsharpEchoClient
             return true;
         }
 
+        /*
+         * generate message(header, body)
+         * send message to server
+         */
         public Boolean read()
         {
             Header echoHeader = null;
@@ -115,7 +126,10 @@ namespace CsharpEchoClient
 
             return true;
         }
-
+        
+        /*
+         * start client 
+         */
         public void start()
         {
             while (true)
@@ -132,6 +146,7 @@ namespace CsharpEchoClient
                     // check tcp connection 
                     // poll 대신에 heart-beat을 보내야 한다 !!! 
                     //Header header
+                    /*
                     if (!peer.Poll(MyConst.HEART_BEAT_TIME*1000, SelectMode.SelectWrite))
                     {
                         HEART_BEATS++;
@@ -143,10 +158,11 @@ namespace CsharpEchoClient
                         continue;
                     }
                     HEART_BEATS = 0;
+                    */
 
                     String strMsg = getStr();
 
-                    if (!send(strMsg))
+                    if (!send(MyConst.MSG_PLAIN, strMsg))
                     {
                         peer.Close();
                         break;
@@ -157,14 +173,9 @@ namespace CsharpEchoClient
                         peer.Close();
                         break;
                     }
-                        
-
                 }// end while
             }
-           
         }// end method
-
-       
 
     }// end client class
 }// end namespace

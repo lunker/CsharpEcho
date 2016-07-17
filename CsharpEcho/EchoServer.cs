@@ -50,21 +50,19 @@ namespace CsharpEchoServer
 
                 try
                 {
-
-
+                    // check client connections
                     if (clientSocket.Poll(MyConst.HEART_BEAT_TIME * 1000, SelectMode.SelectRead))
                     {
                         Console.WriteLine("poll~~");
                     }
 
                     header = Utils.readHeader(clientSocket, MyConst.msgHeaderSerailizedSize);
-                    //Console.WriteLine("body size : " + header.BodySize);
 
-                    body = Utils.readBody(clientSocket, header.BodySize);
-                    //Console.WriteLine("MSG from client : " + Encoding.UTF8.GetString(body.Msg));
+                    body = (Body) Utils.readMessage(clientSocket, header.BodySize);
                     Console.WriteLine("Message : <" + Encoding.UTF8.GetString(body.Msg) + "> received from client # " + clientID);
 
-                    Thread.Sleep(5000);
+                    // test for host shutdown
+                    Thread.Sleep(4000);
 
                     Utils.sendHeader(clientSocket, header);
                     Utils.sendBody(clientSocket, body);
@@ -97,7 +95,6 @@ namespace CsharpEchoServer
         public Socket WaitSocket
         {
             get { return this.waitSocket; }
-            //set { this.waitSocket};
         }
 
         // echo server constructor
