@@ -75,6 +75,9 @@ namespace CsharpEchoClient
             return str;
         }
         
+        /*
+         * send message(header, body) to server
+         */
         public Boolean send(short type, string msg)
         {
             // generate body
@@ -102,7 +105,7 @@ namespace CsharpEchoClient
 
         /*
          * generate message(header, body)
-         * send message to server
+         * read message to server
          */
         public Boolean read()
         {
@@ -176,6 +179,5 @@ namespace CsharpEchoClient
                 }// end while
             }
         }// end method
-
     }// end client class
 }// end namespace

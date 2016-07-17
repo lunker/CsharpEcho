@@ -24,6 +24,10 @@ namespace CsharpEchoServer
         }
     }
 
+
+    /*
+     * client socket handler
+     */
     class Handler
     {
         public Socket clientSocket = null;
@@ -107,6 +111,9 @@ namespace CsharpEchoServer
             Socket waitSocket = connectSocket();
             waitSocket.Listen(MAX_CONNECTIONS);
                         
+
+            // listen on port 9998
+            // make socket handler thread each client connection
             while (true)
             {
                 Socket handler = waitSocket.Accept();
@@ -120,8 +127,6 @@ namespace CsharpEchoServer
                 Console.WriteLine("connection established with client #" + this.clientID);
                 this.clientID++;
             }
-
-            //listen
         }
 
         public Socket connectSocket()
@@ -145,7 +150,5 @@ namespace CsharpEchoServer
             }
 
         }
-
-       
     }
 }

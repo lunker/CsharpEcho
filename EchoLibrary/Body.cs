@@ -28,6 +28,5 @@ namespace EchoLibrary
         {
             get { return this.msg; }
         }
-
     }
 }
